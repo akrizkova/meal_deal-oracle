@@ -6,7 +6,7 @@ export const greggs: ShopDefinition = {
   colour: 'bg-blue-800',
   textColour: 'text-blue-800',
   borderColour: 'border-blue-800',
-  mealDealPrice: 385, // £3.85
+  mealDealPrice: 375, // £3.75 (cold sandwich + drink)
   items: [
     { id: 'greggs-main-001', shopId: 'greggs', slot: 'main', category: 'roll', name: 'Sausage Roll', kcal: 311, price: 135 },
     { id: 'greggs-main-002', shopId: 'greggs', slot: 'main', category: 'roll', name: 'Vegan Sausage Roll', kcal: 309, price: 135, isVegan: true, isVegetarian: true, isPescetarian: true, isDairyFree: true },

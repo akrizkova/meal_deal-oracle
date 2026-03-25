@@ -6,7 +6,7 @@ export const pret: ShopDefinition = {
   colour: 'bg-red-700',
   textColour: 'text-red-700',
   borderColour: 'border-red-700',
-  mealDealPrice: 799, // £7.99 (YOPro subscription price; walk-in ~£10-12)
+  mealDealPrice: 650, // £6.50 (lunch deal, launched Sept 2025)
   items: [
     { id: 'pret-main-001', shopId: 'pret', slot: 'main', category: 'sandwich', name: 'Pret Classic Crayfish & Rocket', kcal: 370, price: 550, isPescetarian: true, isDairyFree: true, isNutFree: true },
     { id: 'pret-main-002', shopId: 'pret', slot: 'main', category: 'sandwich', name: 'Ham & Pickle Baguette', kcal: 455, price: 490 },

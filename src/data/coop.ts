@@ -6,7 +6,7 @@ export const coop: ShopDefinition = {
   colour: 'bg-teal-600',
   textColour: 'text-teal-600',
   borderColour: 'border-teal-600',
-  mealDealPrice: 375, // £3.75
+  mealDealPrice: 350, // £3.50 with Co-op member card
   items: [
     { id: 'coop-main-001', shopId: 'coop', slot: 'main', category: 'sandwich', name: 'Co-op Irresistible Coronation Chicken', kcal: 415, price: 340 },
     { id: 'coop-main-002', shopId: 'coop', slot: 'main', category: 'sandwich', name: 'Tuna Mayonnaise & Sweetcorn', kcal: 360, price: 299, isPescetarian: true, isNutFree: true },

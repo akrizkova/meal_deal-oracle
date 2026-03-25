@@ -6,7 +6,7 @@ export const morrisons: ShopDefinition = {
   colour: 'bg-yellow-500',
   textColour: 'text-yellow-600',
   borderColour: 'border-yellow-500',
-  mealDealPrice: 375, // £3.75
+  mealDealPrice: 350, // £3.50 with My Morrisons app
   items: [
     // Mains
     { id: 'mor-main-001', shopId: 'morrisons', slot: 'main', category: 'sandwich', name: 'Morrisons The Best BLT', kcal: 430, price: 340 },

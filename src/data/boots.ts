@@ -6,7 +6,7 @@ export const boots: ShopDefinition = {
   colour: 'bg-sky-700',
   textColour: 'text-sky-700',
   borderColour: 'border-sky-700',
-  mealDealPrice: 399, // £3.99
+  mealDealPrice: 375, // £3.75 with Advantage Card
   items: [
     { id: 'boots-main-001', shopId: 'boots', slot: 'main', category: 'sandwich', name: 'Chicken & Bacon Sandwich', kcal: 395, price: 350 },
     { id: 'boots-main-002', shopId: 'boots', slot: 'main', category: 'sandwich', name: 'BLT Sandwich', kcal: 380, price: 320 },
