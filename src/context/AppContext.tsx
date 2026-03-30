@@ -14,6 +14,7 @@ interface AppState {
   preferences: Preferences;
   currentCombination: Combination | null;
   savedCombinations: Combination[];
+  noComboError: boolean;
 }
 
 // ── Actions ───────────────────────────────────────────────────────────────────
@@ -144,6 +145,7 @@ function reducer(state: AppState, action: AppAction): AppState {
         selectedShop: action.payload,
         preferences: { ...defaultPreferences },
         screen: 'preferences',
+        noComboError: false,
       };
 
     case 'SET_PREFERENCES': {
@@ -154,13 +156,14 @@ function reducer(state: AppState, action: AppAction): AppState {
         preferences: action.payload,
         currentCombination: combo,
         screen: combo ? 'combination' : state.screen,
+        noComboError: combo === null,
       };
     }
 
     case 'GENERATE_COMBINATION': {
       if (!state.selectedShop) return state;
       const combo = buildCombination(state.selectedShop, state.preferences);
-      return { ...state, currentCombination: combo, screen: combo ? 'combination' : state.screen };
+      return { ...state, currentCombination: combo, screen: combo ? 'combination' : state.screen, noComboError: combo === null };
     }
 
     case 'SHUFFLE_SLOT': {
@@ -191,10 +194,10 @@ function reducer(state: AppState, action: AppAction): AppState {
       };
 
     case 'NAVIGATE':
-      return { ...state, screen: action.payload };
+      return { ...state, screen: action.payload, noComboError: false };
 
     case 'RESET':
-      return { ...state, screen: 'shop', selectedShop: null, currentCombination: null };
+      return { ...state, screen: 'shop', selectedShop: null, currentCombination: null, noComboError: false };
 
     default:
       return state;
@@ -218,6 +221,7 @@ const initialState: AppState = {
   preferences: { ...defaultPreferences },
   currentCombination: null,
   savedCombinations: loadSaved(),
+  noComboError: false,
 };
 
 // ── Context ───────────────────────────────────────────────────────────────────

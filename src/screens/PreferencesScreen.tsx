@@ -160,6 +160,11 @@ export function PreferencesScreen() {
             Please select at least one option for each category.
           </p>
         )}
+        {canGenerate && state.noComboError && (
+          <div className="mb-3 p-3 rounded-xl bg-red-50 border border-red-200 text-sm text-red-700 text-center">
+            No items match your current filters at {shop.displayName}. Try removing some restrictions or selecting more categories.
+          </div>
+        )}
         <button
           onClick={handleGenerate}
           disabled={!canGenerate}
