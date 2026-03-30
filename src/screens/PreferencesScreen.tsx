@@ -9,23 +9,23 @@ import {
 } from '../types';
 import type { MainCategory, SnackCategory, DrinkCategory, DietaryType } from '../types';
 
-const DIETARY_OPTIONS: { value: DietaryType; label: string; emoji: string }[] = [
-  { value: 'none',         label: 'No preference', emoji: '🍽️' },
-  { value: 'vegetarian',  label: 'Vegetarian',     emoji: '🥗' },
-  { value: 'vegan',       label: 'Vegan',          emoji: '🌱' },
-  { value: 'pescetarian', label: 'Pescetarian',    emoji: '🐟' },
+const DIETARY_OPTIONS: { value: DietaryType; label: string }[] = [
+  { value: 'none',         label: 'No preference' },
+  { value: 'vegetarian',  label: 'Vegetarian' },
+  { value: 'vegan',       label: 'Vegan' },
+  { value: 'pescetarian', label: 'Pescetarian' },
 ];
 
 type ExtraKey = 'glutenFree' | 'dairyFree' | 'lactoseFree' | 'halal' | 'nutFree' | 'highProtein' | 'lowCalorie';
 
-const EXTRA_FILTERS: { key: ExtraKey; label: string; emoji: string }[] = [
-  { key: 'glutenFree',   label: 'Gluten-free',    emoji: '🌾' },
-  { key: 'dairyFree',    label: 'Dairy-free',     emoji: '🥛' },
-  { key: 'lactoseFree',  label: 'Lactose-free',   emoji: '🧀' },
-  { key: 'halal',        label: 'Halal',          emoji: '☪️' },
-  { key: 'nutFree',      label: 'Nut-free',       emoji: '🥜' },
-  { key: 'highProtein',  label: 'High protein',   emoji: '💪' },
-  { key: 'lowCalorie',   label: 'Low calorie',    emoji: '🔥' },
+const EXTRA_FILTERS: { key: ExtraKey; label: string }[] = [
+  { key: 'glutenFree',   label: 'Gluten-free' },
+  { key: 'dairyFree',    label: 'Dairy-free' },
+  { key: 'lactoseFree',  label: 'Lactose-free' },
+  { key: 'halal',        label: 'Halal' },
+  { key: 'nutFree',      label: 'Nut-free' },
+  { key: 'highProtein',  label: 'High protein' },
+  { key: 'lowCalorie',   label: 'Low calorie' },
 ];
 
 export function PreferencesScreen() {
@@ -74,71 +74,87 @@ export function PreferencesScreen() {
         <p className="text-white/80 text-sm mt-1">Pick your preferences</p>
       </div>
 
-      <div className="flex-1 px-5 pt-6 max-w-4xl w-full mx-auto">
-        {/* Dietary requirements */}
-        <div className="mb-6">
-          <h3 className="font-semibold text-gray-900 text-base mb-3">🥦 Dietary requirements</h3>
-          <div className="flex flex-wrap gap-2 mb-3">
+      <div className="flex-1 px-5 pt-6 max-w-4xl w-full mx-auto space-y-6">
+
+        {/* ── Section 1: Diet type ─────────────────────────────────── */}
+        <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-5">
+          <p className="text-xs font-semibold uppercase tracking-wider text-gray-400 mb-3">
+            Diet type <span className="normal-case font-normal">— pick one</span>
+          </p>
+          <div className="flex flex-wrap gap-2">
             {DIETARY_OPTIONS.map((opt) => (
               <button
                 key={opt.value}
                 onClick={() => setDietary(opt.value)}
-                className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full text-sm font-medium border transition-colors ${
+                className={`px-4 py-2 rounded-full text-sm font-medium border transition-colors ${
                   dietary === opt.value
                     ? 'bg-gray-900 text-white border-gray-900'
-                    : 'bg-white text-gray-600 border-gray-300'
+                    : 'bg-white text-gray-500 border-gray-200'
                 }`}
               >
-                <span>{opt.emoji}</span>
-                <span>{opt.label}</span>
+                {dietary === opt.value && <span className="mr-1 text-xs">✓</span>}
+                {opt.label}
               </button>
             ))}
           </div>
+        </div>
+
+        {/* ── Section 2: Intolerances & extras ─────────────────────── */}
+        <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-5">
+          <p className="text-xs font-semibold uppercase tracking-wider text-gray-400 mb-3">
+            Intolerances &amp; preferences <span className="normal-case font-normal">— pick any</span>
+          </p>
           <div className="flex flex-wrap gap-2">
             {EXTRA_FILTERS.map((f) => (
               <button
                 key={f.key}
                 onClick={() => toggleExtra(f.key)}
-                className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full text-sm font-medium border transition-colors ${
+                className={`px-4 py-2 rounded-full text-sm font-medium border transition-colors ${
                   extras[f.key]
-                    ? 'bg-amber-600 text-white border-amber-600'
-                    : 'bg-white text-gray-600 border-gray-300'
+                    ? 'bg-amber-500 text-white border-amber-500'
+                    : 'bg-white text-gray-500 border-gray-200'
                 }`}
               >
-                <span>{f.emoji}</span>
-                <span>{f.label}</span>
+                {extras[f.key] && <span className="mr-1 text-xs">✓</span>}
+                {f.label}
               </button>
             ))}
           </div>
         </div>
 
-        {/* On desktop: 3 columns */}
-        <div className="md:grid md:grid-cols-3 md:gap-6">
-          <PreferenceCategoryGroup
-            label="Main"
-            emoji="🥙"
-            options={[...ALL_MAIN_CATEGORIES]}
-            selected={mains}
-            onChange={(v) => setMains(v as MainCategory[])}
-          />
-          <PreferenceCategoryGroup
-            label="Snack"
-            emoji="🍫"
-            options={[...ALL_SNACK_CATEGORIES]}
-            selected={snacks}
-            onChange={(v) => setSnacks(v as SnackCategory[])}
-          />
-          <PreferenceCategoryGroup
-            label="Drink"
-            emoji="🥤"
-            options={[...ALL_DRINK_CATEGORIES]}
-            selected={drinks}
-            onChange={(v) => setDrinks(v as DrinkCategory[])}
-          />
+        {/* ── Section 3: Categories ─────────────────────────────────── */}
+        <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-5">
+          <p className="text-xs font-semibold uppercase tracking-wider text-gray-400 mb-4">
+            Item categories <span className="normal-case font-normal">— only selected types will appear</span>
+          </p>
+          <div className="md:grid md:grid-cols-3 md:gap-6">
+            <PreferenceCategoryGroup
+              label="Main"
+              emoji="🥙"
+              options={[...ALL_MAIN_CATEGORIES]}
+              selected={mains}
+              onChange={(v) => setMains(v as MainCategory[])}
+            />
+            <PreferenceCategoryGroup
+              label="Snack"
+              emoji="🍫"
+              options={[...ALL_SNACK_CATEGORIES]}
+              selected={snacks}
+              onChange={(v) => setSnacks(v as SnackCategory[])}
+            />
+            <PreferenceCategoryGroup
+              label="Drink"
+              emoji="🥤"
+              options={[...ALL_DRINK_CATEGORIES]}
+              selected={drinks}
+              onChange={(v) => setDrinks(v as DrinkCategory[])}
+            />
+          </div>
         </div>
+
       </div>
 
-      <div className="px-5 pt-2 max-w-4xl w-full mx-auto">
+      <div className="px-5 pt-4 max-w-4xl w-full mx-auto">
         {!canGenerate && (
           <p className="text-sm text-red-500 mb-2 text-center">
             Please select at least one option for each category.

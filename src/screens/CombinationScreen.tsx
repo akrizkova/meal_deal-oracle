@@ -2,8 +2,33 @@ import { useState } from 'react';
 import { useApp } from '../context/AppContext';
 import { MealSlot } from '../components/MealSlot';
 import { shopById } from '../data';
-import { formatPrice } from '../types';
+import { formatPrice, ALL_MAIN_CATEGORIES, ALL_SNACK_CATEGORIES, ALL_DRINK_CATEGORIES } from '../types';
 import type { SlotType } from '../types';
+
+function buildFilterSummary(prefs: ReturnType<typeof useApp>['state']['preferences']): string[] {
+  const tags: string[] = [];
+
+  if (prefs.dietary !== 'none') {
+    tags.push(prefs.dietary.charAt(0).toUpperCase() + prefs.dietary.slice(1));
+  }
+  if (prefs.glutenFree)  tags.push('Gluten-free');
+  if (prefs.dairyFree)   tags.push('Dairy-free');
+  if (prefs.lactoseFree) tags.push('Lactose-free');
+  if (prefs.halal)       tags.push('Halal');
+  if (prefs.nutFree)     tags.push('Nut-free');
+  if (prefs.highProtein) tags.push('High protein');
+  if (prefs.lowCalorie)  tags.push('Low calorie');
+
+  const excludedMains  = ALL_MAIN_CATEGORIES.filter((c) => !prefs.mains.includes(c));
+  const excludedSnacks = ALL_SNACK_CATEGORIES.filter((c) => !prefs.snacks.includes(c));
+  const excludedDrinks = ALL_DRINK_CATEGORIES.filter((c) => !prefs.drinks.includes(c));
+
+  for (const c of excludedMains)  tags.push(`No ${c}`);
+  for (const c of excludedSnacks) tags.push(`No ${c}`);
+  for (const c of excludedDrinks) tags.push(`No ${c}`);
+
+  return tags;
+}
 
 export function CombinationScreen() {
   const { state, dispatch } = useApp();
@@ -20,6 +45,8 @@ export function CombinationScreen() {
 
   const individualTotal = combo.main.price + combo.snack.price + combo.drink.price;
   const savings = individualTotal - shop.mealDealPrice;
+
+  const filterTags = buildFilterSummary(state.preferences);
 
   function handleSave() {
     if (isSaved) return;
@@ -43,6 +70,20 @@ export function CombinationScreen() {
         </button>
         <h2 className="text-2xl font-bold text-white">Your meal deal</h2>
         <p className="text-white/80 text-sm mt-1">{shop.displayName} · Tap 🔀 to shuffle any item</p>
+
+        {/* Active filters summary */}
+        {filterTags.length > 0 && (
+          <div className="flex flex-wrap gap-1.5 mt-3">
+            {filterTags.map((tag) => (
+              <span
+                key={tag}
+                className="px-2 py-0.5 rounded-full text-xs font-medium bg-white/20 text-white"
+              >
+                {tag}
+              </span>
+            ))}
+          </div>
+        )}
       </div>
 
       <div className="flex-1 max-w-4xl w-full mx-auto px-5 pt-5">
