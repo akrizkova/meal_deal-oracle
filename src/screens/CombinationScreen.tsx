@@ -66,7 +66,7 @@ export function CombinationScreen() {
             <span className="line-through">{formatPrice(individualTotal)}</span>
           </div>
           <div className="flex items-center justify-between text-sm font-semibold text-gray-900 mb-2">
-            <span>Meal deal price</span>
+            <span>Meal deal price <span className="text-[10px] font-normal text-gray-400">(loyalty/member)</span></span>
             <span>{formatPrice(shop.mealDealPrice)}</span>
           </div>
           {savings > 0 && (
