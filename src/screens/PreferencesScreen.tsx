@@ -2,11 +2,6 @@ import { useState } from 'react';
 import { useApp } from '../context/AppContext';
 import { PreferenceCategoryGroup } from '../components/PreferenceCategoryGroup';
 import { shopById } from '../data';
-import {
-  ALL_MAIN_CATEGORIES,
-  ALL_SNACK_CATEGORIES,
-  ALL_DRINK_CATEGORIES,
-} from '../types';
 import type { MainCategory, SnackCategory, DrinkCategory, DietaryType } from '../types';
 
 const DIETARY_OPTIONS: { value: DietaryType; label: string }[] = [
@@ -32,9 +27,19 @@ export function PreferencesScreen() {
   const { state, dispatch } = useApp();
   const shop = shopById[state.selectedShop!];
 
-  const [mains, setMains]     = useState<MainCategory[]>(state.preferences.mains);
-  const [snacks, setSnacks]   = useState<SnackCategory[]>(state.preferences.snacks);
-  const [drinks, setDrinks]   = useState<DrinkCategory[]>(state.preferences.drinks);
+  // Only show categories that actually exist at this shop
+  const shopMains  = [...new Set(shop.items.filter(i => i.slot === 'main').map(i => i.category))]  as MainCategory[];
+  const shopSnacks = [...new Set(shop.items.filter(i => i.slot === 'snack').map(i => i.category))] as SnackCategory[];
+  const shopDrinks = [...new Set(shop.items.filter(i => i.slot === 'drink').map(i => i.category))] as DrinkCategory[];
+
+  // Initialise selection from saved prefs, intersecting with what this shop actually stocks
+  const initMains  = state.preferences.mains.filter(c  => shopMains.includes(c));
+  const initSnacks = state.preferences.snacks.filter(c => shopSnacks.includes(c));
+  const initDrinks = state.preferences.drinks.filter(c => shopDrinks.includes(c));
+
+  const [mains, setMains]     = useState<MainCategory[]>(initMains.length  > 0 ? initMains  : shopMains);
+  const [snacks, setSnacks]   = useState<SnackCategory[]>(initSnacks.length > 0 ? initSnacks : shopSnacks);
+  const [drinks, setDrinks]   = useState<DrinkCategory[]>(initDrinks.length > 0 ? initDrinks : shopDrinks);
   const [dietary, setDietary] = useState<DietaryType>(state.preferences.dietary);
   const [extras, setExtras]   = useState<Record<ExtraKey, boolean>>({
     glutenFree:  state.preferences.glutenFree,
@@ -76,7 +81,7 @@ export function PreferencesScreen() {
 
       <div className="flex-1 px-5 pt-6 max-w-4xl w-full mx-auto space-y-6">
 
-        {/* ── Section 1: Diet type ─────────────────────────────────── */}
+        {/* ── Section 1: Diet type ───────────────────────────────── */}
         <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-5">
           <p className="text-xs font-semibold uppercase tracking-wider text-gray-400 mb-3">
             Diet type <span className="normal-case font-normal">— pick one</span>
@@ -99,7 +104,7 @@ export function PreferencesScreen() {
           </div>
         </div>
 
-        {/* ── Section 2: Intolerances & extras ─────────────────────── */}
+        {/* ── Section 2: Intolerances & extras ──────────────────── */}
         <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-5">
           <p className="text-xs font-semibold uppercase tracking-wider text-gray-400 mb-3">
             Intolerances &amp; preferences <span className="normal-case font-normal">— pick any</span>
@@ -122,7 +127,7 @@ export function PreferencesScreen() {
           </div>
         </div>
 
-        {/* ── Section 3: Categories ─────────────────────────────────── */}
+        {/* ── Section 3: Categories ──────────────────────────────── */}
         <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-5">
           <p className="text-xs font-semibold uppercase tracking-wider text-gray-400 mb-4">
             Item categories <span className="normal-case font-normal">— only selected types will appear</span>
@@ -131,21 +136,21 @@ export function PreferencesScreen() {
             <PreferenceCategoryGroup
               label="Main"
               emoji="🥙"
-              options={[...ALL_MAIN_CATEGORIES]}
+              options={shopMains}
               selected={mains}
               onChange={(v) => setMains(v as MainCategory[])}
             />
             <PreferenceCategoryGroup
               label="Snack"
               emoji="🍫"
-              options={[...ALL_SNACK_CATEGORIES]}
+              options={shopSnacks}
               selected={snacks}
               onChange={(v) => setSnacks(v as SnackCategory[])}
             />
             <PreferenceCategoryGroup
               label="Drink"
               emoji="🥤"
-              options={[...ALL_DRINK_CATEGORIES]}
+              options={shopDrinks}
               selected={drinks}
               onChange={(v) => setDrinks(v as DrinkCategory[])}
             />
